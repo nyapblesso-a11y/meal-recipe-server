@@ -8,6 +8,7 @@ import app from '../app.js';
 import deb from 'debug'
 const debug = deb('meal-reecipe-server:server');
 import http from 'http';
+import { connectDB } from '../config/db.js';
 
 /**
  * Get port from environment and store in Express.
@@ -26,10 +27,13 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+(async () => {
+  await connectDB(); // 
+  server.listen(port);
   server.on("listening", () => {
    console.log(`http://localhost:${port}`)
   });
+})();
 /**
  * Normalize a port into a number, string, or false.
  */
