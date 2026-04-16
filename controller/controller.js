@@ -21,7 +21,17 @@ export const getRecipes = async (req, res) => {
 
 export const addRecipe = async (req, res) => {
   try {
-    const recipe = await createRecipes(req.body);
+    const {name, description, imageUrl} = req.body
+
+    let finalImage = imageUrl
+
+    if(req.file) {
+     finalImage = `/uploads/${req.file.filename}`;
+    }
+
+    const recipe = await createRecipes({
+        name, description, image: finalImage
+    });
     res.status(201).json({
       message: "Recipe sucessfully created!",
       recipe,
