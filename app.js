@@ -6,8 +6,8 @@ import logger  from 'morgan';
 
 import indexRouter from'./routes/index.js';
 import usersRouter from './routes/users.js';
-
-var app = express();
+import recipeRouter from './routes/recipeRoutes.js'
+const app = express();
 
 
 app.use(logger('dev'));
@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
+app.use('/api/recipes', recipeRouter)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

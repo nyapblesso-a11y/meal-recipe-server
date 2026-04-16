@@ -4,7 +4,7 @@ import {
   getAllRecipes,
   toggleFavorite,
   deleteRecipe,
-} from "../model/recipeMoodel";
+} from "../model/recipeMoodel.js";
 
 // get all recipes
 
