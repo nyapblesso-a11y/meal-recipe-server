@@ -3,9 +3,8 @@ import express  from 'express' ;
 import path  from 'path';
 import cookieParser  from 'cookie-parser';
 import logger  from 'morgan';
-
 import indexRouter from'./routes/index.js';
-import usersRouter from './routes/users.js';
+import uploadRouter from './routes/uploadRouter.js';
 import recipeRouter from './routes/recipeRoutes.js'
 import { fileURLToPath } from "url";
 
@@ -26,7 +25,7 @@ app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/upload', uploadRouter);
 app.use('/api/recipes', recipeRouter)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
