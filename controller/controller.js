@@ -50,4 +50,29 @@ export const editRecipe = async (req, res) => {
   }
 };
 
-//
+// delete recipe
+
+export const removeRecipe = async (req, res) => {
+  try {
+    await deleteRecipe(req.param.id);
+    res.json({
+      message: "Deleted Successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ error: "failed to delete recipe" });
+  }
+};
+
+// toggle favorite
+
+export const toggleFav = async (req, res) => {
+  try {
+    const update = await toggleFavorite(req.param.id);
+    res.json({
+      message: "update sucessfully",
+      update
+    });
+  } catch (error) {
+    res.status(500).json({error: "failed to toggle favorite"})
+  }
+};
