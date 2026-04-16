@@ -38,3 +38,22 @@ export const updateRecipes = async (id, recipe) => {
 
   return result.rows[0]
 };
+
+// Delete recipe
+
+export const deleteRecipe = async (id) => {
+    await pool.query( "DELETE FROM recipes WHERE id = $1",
+    [id])
+}
+
+// toggle favorite
+
+export const toggleFavorite = async(id) => {
+    const result = await pool.query( `UPDATE recipes
+     SET favorite = NOT favorite
+     WHERE id = $1
+     RETURNING *`,
+    [id]
+)
+return result.rows[0]
+}
