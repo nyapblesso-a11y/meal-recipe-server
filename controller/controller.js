@@ -22,7 +22,9 @@ export const getRecipes = async (req, res) => {
 export const addRecipe = async (req, res) => {
   try {
     const {name, description, imageUrl} = req.body
-
+     if(!name) {
+      return res.status(400).json({error: "Name is required"})
+     }
     let finalImage = imageUrl
 
     if(req.file) {

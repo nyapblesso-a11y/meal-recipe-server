@@ -7,7 +7,7 @@ import indexRouter from'./routes/index.js';
 import uploadRouter from './routes/uploadRouter.js';
 import recipeRouter from './routes/recipeRoutes.js'
 import { fileURLToPath } from "url";
-
+import cors from "cors"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +16,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 
+app.use(cors({
+  origin: "http://localhost:5173"
+}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
