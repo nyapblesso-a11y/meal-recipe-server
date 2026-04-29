@@ -4,7 +4,15 @@ import {
   getAllRecipes,
   toggleFavorite,
   deleteRecipe,
+  getRecipeById,
 } from "../model/recipeMoodel.js";
+
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // get all recipes
 
@@ -21,18 +29,20 @@ export const getRecipes = async (req, res) => {
 
 export const addRecipe = async (req, res) => {
   try {
-    const {name, description, imageUrl} = req.body
-     if(!name) {
-      return res.status(400).json({error: "Name is required"})
-     }
-    let finalImage = imageUrl
+    const { name, description, imageUrl } = req.body;
+    if (!name) {
+      return res.status(400).json({ error: "Name is required" });
+    }
+    let finalImage = imageUrl;
 
-    if(req.file) {
-   finalImage = `http://localhost:4040/uploads/${req.file.filename}`;;
+    if (req.file) {
+      finalImage = `http://localhost:4040/uploads/${req.file.filename}`;
     }
 
     const recipe = await createRecipes({
-        name, description, image: finalImage
+      name,
+      description,
+      image: finalImage,
     });
     res.status(201).json({
       message: "Recipe sucessfully created!",
@@ -62,15 +72,38 @@ export const editRecipe = async (req, res) => {
   }
 };
 
-// delete recipe
 
 export const removeRecipe = async (req, res) => {
   try {
+    const recipe = await getRecipeById(req.params.id);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    console.log("IMAGE FROM DB:", recipe.image);
+
+    if (recipe.image) {
+      const cleanPath = recipe.image.replace("http://localhost:4040", "");
+
+      const filePath = path.join(__dirname, "..", cleanPath);
+
+      console.log("FILE TO DELETE:", filePath);
+
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log("DELETE ERROR:", err.message);
+        } else {
+          console.log("FILE DELETED SUCCESSFULLY");
+        }
+      });
+    }
+
     await deleteRecipe(req.params.id);
-    res.json({
-      message: "Deleted Successfully",
-    });
+
+    res.json({ message: "Deleted Successfully" });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "failed to delete recipe" });
   }
 };
