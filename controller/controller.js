@@ -28,7 +28,7 @@ export const addRecipe = async (req, res) => {
     let finalImage = imageUrl
 
     if(req.file) {
-     finalImage = `/uploads/${req.file.filename}`;
+   finalImage = `http://localhost:4040/uploads/${req.file.filename}`;;
     }
 
     const recipe = await createRecipes({
@@ -50,7 +50,7 @@ export const addRecipe = async (req, res) => {
 
 export const editRecipe = async (req, res) => {
   try {
-    const update = await updateRecipes(req.param.id, req.body);
+    const update = await updateRecipes(req.params.id, req.body);
     res.json({
       message: "Recipe updated successfully",
       update,
@@ -66,7 +66,7 @@ export const editRecipe = async (req, res) => {
 
 export const removeRecipe = async (req, res) => {
   try {
-    await deleteRecipe(req.param.id);
+    await deleteRecipe(req.params.id);
     res.json({
       message: "Deleted Successfully",
     });
@@ -78,13 +78,21 @@ export const removeRecipe = async (req, res) => {
 // toggle favorite
 
 export const toggleFav = async (req, res) => {
+  console.log("TOGGLE HIT:", req.params.id);
+
   try {
-    const update = await toggleFavorite(req.param.id);
-    res.json({
-      message: "update sucessfully",
-      update
+    const update = await toggleFavorite(req.params.id);
+
+    if (!update) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    return res.json({
+      message: "updated successfully",
+      update,
     });
   } catch (error) {
-    res.status(500).json({error: "failed to toggle favorite"})
+    console.log("TOGGLE ERROR:", error);
+    res.status(500).json({ error: "failed to toggle favorite" });
   }
 };

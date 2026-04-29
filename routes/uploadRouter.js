@@ -5,7 +5,6 @@ const router = express.Router();
 
 // single file upload
 router.post("/", upload.single("image"), (req, res, next) => {
-console.log("UPLOAD ROUTE HIT:", req.method, req.url);
   next();
   try {
     if (!req.file) {

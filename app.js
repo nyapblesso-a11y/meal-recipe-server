@@ -24,18 +24,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// make uploads accessible publicly
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use('/', indexRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/recipes', recipeRouter)
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
 app.use(function (err, req, res, next) {
   const statusCode = err.status || 500;
   res.status(statusCode);
