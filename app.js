@@ -17,7 +17,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: "http://localhost:5173"
+  origin: "https://meal-recipe-server.onrender.com"
 }));
 app.use(logger('dev'));
 app.use(express.json());
