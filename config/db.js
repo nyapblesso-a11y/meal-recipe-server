@@ -1,16 +1,16 @@
 import pkg from 'pg'
 import { env } from './env.js'
 
+const {Pool} = pkg 
 
-const { Pool } = pkg;
-
-export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
-
+export const pool = new Pool ({
+ port: env.DB_PORT,
+ host: env.DB_HOST,
+ database: env.DB_NAME,
+ user: env.DB_USER,
+ password: env.DB_PASSWORD,
+ 
+})
 
 export const connectDB = async () => {
      try {
