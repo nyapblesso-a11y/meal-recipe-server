@@ -9,4 +9,6 @@ export const env = {
   DB_NAME: process.env.DB_NAME,
   DB_USER: process.env.DB_USER,
   DB_PASSWORD: process.env.DB_PASSWORD,
+  
+  FRONTEND_PORT: process.env.FRONTEND_PORT
 };

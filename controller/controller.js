@@ -21,8 +21,13 @@ export const getRecipes = async (req, res) => {
     const recipes = await getAllRecipes();
     res.json(recipes);
   } catch (err) {
-    res.status(500).json({ error: "failed to fetch recipes" });
-  }
+  console.log("GET RECIPES ERROR:", err);
+
+  res.status(500).json({
+    error: "failed to fetch recipes",
+    message: err.message,
+  });
+}
 };
 
 //create recipe

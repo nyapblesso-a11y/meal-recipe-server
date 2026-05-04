@@ -8,6 +8,7 @@ import uploadRouter from './routes/uploadRouter.js';
 import recipeRouter from './routes/recipeRoutes.js'
 import { fileURLToPath } from "url";
 import cors from "cors"
+import { env } from './config/env.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,9 +17,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 
-app.use(cors({
-  origin: "https://meal-recipe-server.onrender.com"
-}));
+
+
+app.use(
+  cors({
+    origin: [
+    env.FRONTEND_PORT
+      , 
+      "https://meal-recipe-app-oolr.vercel.app/", 
+    ],
+    credentials: true,
+  })
+);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
