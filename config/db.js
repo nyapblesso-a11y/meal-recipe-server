@@ -1,16 +1,17 @@
 import pkg from 'pg'
-import { env } from './env.js'
+import dotenv from "dotenv";
+dotenv.config();
 
-const {Pool} = pkg 
+const { Pool } = pkg;
 
-export const pool = new Pool ({
- port: env.DB_PORT,
- host: env.DB_HOST,
- database: env.DB_NAME,
- user: env.DB_USER,
- password: env.DB_PASSWORD,
- 
-})
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  family: 4, // 🔥 FORCE IPv4 (this fixes your issue)
+});
+
 
 export const connectDB = async () => {
      try {
