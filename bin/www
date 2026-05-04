@@ -13,8 +13,7 @@ import { connectDB } from '../config/db.js';
 /**
  * Get port from environment and store in Express.
  */
-import dns from "dns";
-dns.setDefaultResultOrder("ipv4first");
+
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);

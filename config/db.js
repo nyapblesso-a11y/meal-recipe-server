@@ -9,8 +9,7 @@ export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
-  },
-  host: undefined, // IMPORTANT: prevent override issues
+  }
 });
 
 export const connectDB = async () => {
@@ -20,7 +19,7 @@ export const connectDB = async () => {
     client.release();
   } catch (error) {
     console.error("DB ERROR:", error);
-    // ❌ DO NOT crash app for now
+   
   }
 };
 export default pool;
