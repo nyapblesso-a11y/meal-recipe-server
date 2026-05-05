@@ -1,56 +1,47 @@
-import createError  from'http-errors';
-import express  from 'express' ;
-import path  from 'path';
-import cookieParser  from 'cookie-parser';
-import logger  from 'morgan';
-import indexRouter from'./routes/index.js';
-import uploadRouter from './routes/uploadRouter.js';
-import recipeRouter from './routes/recipeRoutes.js'
-import { fileURLToPath } from "url";
-import cors from "cors"
+import createError from "http-errors";
+import express from "express";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import cors from "cors";
 
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+import indexRouter from "./routes/index.js";
+import uploadRouter from "./routes/uploadRouter.js";
+import recipeRouter from "./routes/recipeRoutes.js";
 
 const app = express();
 
 
-// app.use(cors({
-//   origin: [
-//     "http://localhost:5173",
-//     "https://meal-recipe-app-oolr-git-dev-nyapbless-projects.vercel.app"
-//   ],
-//   credentials: true
-// }));
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:5173",
+//       // "https://your-frontend-domain.vercel.app",
+//     ],
+//     credentials: true,
+//   })
+// );
 
-app.use(cors());
-
-app.options("*", cors());
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// ROUTES
+app.use("/", indexRouter);
+app.use("/api/upload", uploadRouter);
+app.use("/api/recipes", recipeRouter);
 
-app.use('/', indexRouter);
-app.use('/api/upload', uploadRouter);
-app.use('/api/recipes', recipeRouter)
-app.use(function(req, res, next) {
+// 404 handler
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 app.use(function (err, req, res, next) {
-  const statusCode = err.status || 500;
-  res.status(statusCode);
-  res.send({
-    error: {
-      status: statusCode,
-      message: err.message,
-      stack: req.app.get('env') === 'development' ? err.stack : {}
-    }
+  console.log("🔥 GLOBAL ERROR:", err); // VERY IMPORTANT
+
+  res.status(err.status || 500).json({
+    error: err.message,
+    stack: err.stack,
   });
 });
 

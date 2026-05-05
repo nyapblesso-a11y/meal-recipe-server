@@ -6,78 +6,78 @@ import {
   deleteRecipe,
   getRecipeById,
 } from "../model/recipeMoodel.js";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js"; 
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// get all recipes
-
+// GET all recipes
 export const getRecipes = async (req, res) => {
   try {
     const recipes = await getAllRecipes();
     res.json(recipes);
   } catch (err) {
-  console.log("GET RECIPES ERROR:", err);
+    console.log("GET RECIPES ERROR:", err);
 
-  res.status(500).json({
-    error: "failed to fetch recipes",
-    message: err.message,
-  });
-}
-};
-
-//create recipe
-
-export const addRecipe = async (req, res) => {
-  try {
-    const { name, description, imageUrl } = req.body;
-    if (!name) {
-      return res.status(400).json({ error: "Name is required" });
-    }
-    let finalImage = imageUrl;
-
-    if (req.file) {
-      finalImage = `http://localhost:4040/uploads/${req.file.filename}`;
-    }
-
-    const recipe = await createRecipes({
-      name,
-      description,
-      image: finalImage,
-    });
-    res.status(201).json({
-      message: "Recipe sucessfully created!",
-      recipe,
-    });
-  } catch (err) {
     res.status(500).json({
-      error: "Failed to create recipe",
+      error: "failed to fetch recipes",
       message: err.message,
     });
   }
 };
 
-// update recipe
 
+
+
+export const addRecipe = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    let image = null;
+
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer);
+      image = result.secure_url;
+    }
+
+    const recipe = await createRecipes({
+      name,
+      description,
+      image,
+    });
+
+    return res.status(201).json(recipe);
+
+  } catch (err) {
+    console.log("ADD RECIPE ERROR:", err);
+
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
+};
+
+// UPDATE recipe
 export const editRecipe = async (req, res) => {
   try {
-    const update = await updateRecipes(req.params.id, req.body);
+    const data = { ...req.body };
+
+    if (req.file) {
+      data.image = req.file.path;
+    }
+
+    const update = await updateRecipes(req.params.id, data);
+
     res.json({
       message: "Recipe updated successfully",
       update,
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to update recipe", message: err.message });
+    res.status(500).json({
+      error: "Failed to update recipe",
+      message: err.message,
+    });
   }
 };
 
-
+// DELETE recipe (NO FILE SYSTEM)
 export const removeRecipe = async (req, res) => {
   try {
     const recipe = await getRecipeById(req.params.id);
@@ -86,38 +86,17 @@ export const removeRecipe = async (req, res) => {
       return res.status(404).json({ error: "Recipe not found" });
     }
 
-    console.log("IMAGE FROM DB:", recipe.image);
-
-    if (recipe.image) {
-      const cleanPath = recipe.image.replace("http://localhost:4040", "");
-
-      const filePath = path.join(__dirname, "..", cleanPath);
-
-      console.log("FILE TO DELETE:", filePath);
-
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.log("DELETE ERROR:", err.message);
-        } else {
-          console.log("FILE DELETED SUCCESSFULLY");
-        }
-      });
-    }
-
     await deleteRecipe(req.params.id);
 
-    res.json({ message: "Deleted Successfully" });
+    res.json({ message: "Deleted successfully" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "failed to delete recipe" });
   }
 };
 
-// toggle favorite
-
+// TOGGLE favorite
 export const toggleFav = async (req, res) => {
-  console.log("TOGGLE HIT:", req.params.id);
-
   try {
     const update = await toggleFavorite(req.params.id);
 
@@ -125,7 +104,7 @@ export const toggleFav = async (req, res) => {
       return res.status(404).json({ error: "Recipe not found" });
     }
 
-    return res.json({
+    res.json({
       message: "updated successfully",
       update,
     });

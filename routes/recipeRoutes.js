@@ -1,26 +1,21 @@
-import express from "express"
-import { getRecipes,addRecipe,editRecipe,removeRecipe,toggleFav } from "../controller/controller.js"
-import { upload } from "../middleware/uploadMiddleware.js"
-const router = express.Router()
- 
-// get all recipes
+import express from "express";
 
-router.get("/", getRecipes)
+import {
+  getRecipes,
+  addRecipe,
+  editRecipe,
+  removeRecipe,
+  toggleFav,
+} from "../controller/controller.js";
 
-//post new recipes
+import { upload } from "../middleware/uploadMiddleware.js";
 
-router.post("/", upload.single('image'), addRecipe)
+const router = express.Router();
 
-// put update recipe
+router.get("/", getRecipes);
+router.post("/", upload.single("image"), addRecipe);
+router.put("/:id", editRecipe);
+router.delete("/:id", removeRecipe);
+router.patch("/:id/favorite", toggleFav);
 
-router.put("/:id", editRecipe)
-
-// delete recipe 
-
-router.delete("/:id",removeRecipe)
-
-// toggle favorite
-
-router.patch("/:id/favorite", toggleFav)
-
-export default router
+export default router;
