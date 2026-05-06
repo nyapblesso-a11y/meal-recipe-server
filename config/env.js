@@ -1,14 +1,11 @@
-import dotenv from 'dotenv'
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
-export const env = {
-  PORT: process.env.PORT || 4040,
-  DB_HOST: process.env.DB_HOST,
-  DB_PORT: process.env.DB_PORT || 5432,
-  DB_NAME: process.env.DB_NAME,
-  DB_USER: process.env.DB_USER,
-  DB_PASSWORD: process.env.DB_PASSWORD,
-  
-  FRONTEND_PORT: process.env.FRONTEND_PORT
+export const ENV = {
+  PORT: process.env.PORT,
+  DATABASE_URL: process.env.DATABASE_URL,
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };
