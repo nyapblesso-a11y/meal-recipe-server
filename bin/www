@@ -3,9 +3,8 @@
 /**
  * Module dependencies.
  */
-import dotenv from "dotenv";
-dotenv.config();
 
+import { ENV } from '../config/env.js';
 import app from '../app.js';
 import deb from 'debug'
 const debug = deb('meal-reecipe-server:server');
@@ -17,7 +16,7 @@ import { connectDB } from '../config/db.js';
  */
 
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(ENV.PORT || '3000');
 app.set('port', port);
 
 /**

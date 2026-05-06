@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get("/", getRecipes);
 router.post("/", upload.single("image"), addRecipe);
-router.put("/:id", editRecipe);
+router.put("/:id", upload.single("image"), editRecipe);
 router.delete("/:id", removeRecipe);
 router.patch("/:id/favorite", toggleFav);
 

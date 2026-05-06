@@ -55,28 +55,35 @@ export const addRecipe = async (req, res) => {
 };
 
 // UPDATE recipe
+
 export const editRecipe = async (req, res) => {
   try {
-    const data = { ...req.body };
+    const { name, description } = req.body;
+
+    let image = req.body.image;
 
     if (req.file) {
-      data.image = req.file.path;
+      image = req.file.path;
     }
 
-    const update = await updateRecipes(req.params.id, data);
+    const update = await updateRecipes(req.params.id, {
+      name,
+      description,
+      image,
+    });
 
-    res.json({
+    return res.json({
       message: "Recipe updated successfully",
       update,
     });
   } catch (err) {
-    res.status(500).json({
-      error: "Failed to update recipe",
-      message: err.message,
+    console.log("🔥 UPDATE ERROR:", err);
+
+    return res.status(500).json({
+      error: err.message,
     });
   }
 };
-
 // DELETE recipe (NO FILE SYSTEM)
 export const removeRecipe = async (req, res) => {
   try {
