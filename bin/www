@@ -33,7 +33,6 @@ var server = http.createServer(app);
   await connectDB(); // 
   server.listen(port);
   server.on("listening", () => {
-   console.log(`http://localhost:${port}`)
   });
 })();
 /**

@@ -19,9 +19,8 @@ export const connectDB = async () => {
     const client = await pool.connect();
     client.release();
 
-    console.log("✅ DB connected");
   } catch (error) {
-    console.error("DB ERROR:", error);
+  
     process.exit(1);
   }
 };
