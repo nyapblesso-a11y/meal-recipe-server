@@ -63,7 +63,8 @@ export const editRecipe = async (req, res) => {
     let image = req.body.image;
 
     if (req.file) {
-      image = req.file.path;
+      const result = await uploadToCloudinary(req.file.buffer);
+      image = result.secure_url;
     }
 
     const update = await updateRecipes(req.params.id, {
@@ -76,6 +77,7 @@ export const editRecipe = async (req, res) => {
       message: "Recipe updated successfully",
       update,
     });
+
   } catch (err) {
     console.log("🔥 UPDATE ERROR:", err);
 

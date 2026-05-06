@@ -21,7 +21,6 @@ export const createRecipes = async (recipe) => {
 };
 
 // update recipe
-
 export const updateRecipes = async (id, recipe) => {
   const { name, description, image } = recipe;
 
@@ -29,14 +28,13 @@ export const updateRecipes = async (id, recipe) => {
     `UPDATE recipes
      SET name = $1,
          description = $2,
-         image = $3,
-         updated_at = CURRENT_TIMESTAMP
+         image = $3
      WHERE id = $4
      RETURNING *`,
     [name, description, image, id]
   );
 
-  return result.rows[0]
+  return result.rows[0];
 };
 
 // Delete recipe
